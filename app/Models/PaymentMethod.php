@@ -10,30 +10,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\FormaPagoFields;
+use App\Models\PaymentMethodFields;
 
 /**
- * Class FormaPago
+ * Class PaymentMethod
  * 
- * @property int $IdFormaPago
- * @property string $FormaPago
+ * @property int $id
+ * @property string $method
  * 
- * @property Collection|Compra[] $compras
+ * @property Collection|Purchase[] $purchases
  *
  * @package App\Models
  */
-class FormaPago extends Model implements FormaPagoFields
+class PaymentMethod extends Model implements PaymentMethodFields
 {
 	protected $table = self::table_name;
 	protected $primaryKey = self::Id_col;
 	public $timestamps = false;
 
 	protected $fillable = [
-		self::FormaPago_col
+		self::Method_col
 	];
 
-	public function compras()
+	public function purchases()
 	{
-		return $this->hasMany(Compra::class, Compra::FormaPago_col);
+		return $this->hasMany(Purchase::class, Purchase::Payment_Method_col);
 	}
 }
