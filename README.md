@@ -64,3 +64,6 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Notes
+- To avoid that Visual studio code shows unecesarry errors, we install the package --dev barryvdh/laravel-ide-helper, and know every time we install a new package we could execute the command "php artisan ide-helper:generate" to avoid error from the ide.

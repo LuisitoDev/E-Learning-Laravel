@@ -24,12 +24,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Role::create([
-            "type" => "School"
-        ]);
 
         Role::create([
             "type" => "Student"
+        ]);
+        
+        Role::create([
+            "type" => "School"
         ]);
 
         PaymentMethod::create([

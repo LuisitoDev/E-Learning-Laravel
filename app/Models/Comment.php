@@ -11,6 +11,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CommentFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Comment
@@ -30,9 +31,11 @@ use App\Models\CommentFields;
  */
 class Comment extends Model implements CommentFields
 {
+    use SoftDeletes;
+	
 	protected $table = self::table_name;
 	protected $primaryKey = self::Id_col;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Commenting_User_col => 'int',

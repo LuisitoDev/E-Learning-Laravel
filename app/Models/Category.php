@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CategoryFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Category
@@ -32,9 +33,11 @@ use App\Models\CategoryFields;
  */
 class Category extends Model implements CategoryFields
 {
+    use SoftDeletes;
+	
 	protected $table = self::table_name;
 	protected $primaryKey = self::Id_col;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Creator_User_col => 'int'

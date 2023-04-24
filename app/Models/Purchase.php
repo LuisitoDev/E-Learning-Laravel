@@ -11,6 +11,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PurchaseFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Purchase
@@ -34,9 +35,11 @@ use App\Models\PurchaseFields;
  */
 class Purchase extends Model implements PurchaseFields
 {
+    use SoftDeletes;
+	
 	protected $table = self::table_name;
 	public $incrementing = false;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Purchasing_User_col => 'int',

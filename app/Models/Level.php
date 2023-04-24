@@ -11,6 +11,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\LevelFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Level
@@ -32,9 +33,11 @@ use App\Models\LevelFields;
  */
 class Level extends Model implements LevelFields
 {
+    use SoftDeletes;
+	
 	protected $table = self::table_name;
 	protected $primaryKey = self::Id_col;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Free_Trial_col => 'bool',

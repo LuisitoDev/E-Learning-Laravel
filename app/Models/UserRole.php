@@ -33,6 +33,16 @@ class UserRole extends Model implements UserRoleFields
 		self::Role_col => 'int'
 	];
 
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		self::User_col,
+		self::Role_col
+	];
+
 	public function role()
 	{
 		return $this->belongsTo(Role::class, self::Role_col);

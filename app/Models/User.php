@@ -12,10 +12,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User
- * 
+ *
  * @property int $id
  * @property string $name
  * @property string $first_surname
@@ -26,7 +28,7 @@ use App\Models\UserFields;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * 
+ *
  * @property Collection|Vote[] $votes
  * @property Collection|Category[] $categories
  * @property Collection|Comment[] $comments
@@ -39,9 +41,11 @@ use App\Models\UserFields;
  */
 class User extends Model implements UserFields
 {
+    use HasApiTokens, SoftDeletes;
+
 	protected $table = self::table_name;
 	protected $primaryKey = self::Id_col;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Birthday_col => 'date',

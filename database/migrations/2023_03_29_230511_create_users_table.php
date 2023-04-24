@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string(User::Name_col);
             $table->string(User::First_Surname_col);
             $table->string(User::Second_Surname_col)->nullable();
-            $table->timestamp(User::Birthday_col);
+            $table->date(User::Birthday_col);
             $table->string(User::Email_col)->unique();
             $table->string(User::Password_col);
             $table->timestamps();

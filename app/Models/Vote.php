@@ -11,6 +11,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\VoteFields;
+use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Vote
  * 
@@ -25,9 +26,11 @@ use App\Models\VoteFields;
  */
 class Vote extends Model implements VoteFields
 {
+    use SoftDeletes;
+	
 	protected $table = self::table_name;
 	public $incrementing = false;
-	public $timestamps = false;
+	public $timestamps = true;
 
 	protected $casts = [
 		self::Voting_User_col => 'int',
