@@ -13,10 +13,10 @@ use App\Models\CourseCategoryFields;
 
 /**
  * Class CourseCategory
- * 
+ *
  * @property int $course_id
  * @property int $category_id
- * 
+ *
  * @property Course $course
  * @property Category $category
  *
@@ -31,6 +31,11 @@ class CourseCategory extends Model implements CourseCategoryFields
 	protected $casts = [
 		self::Course_col => 'int',
 		self::Category_col => 'int'
+	];
+
+    protected $fillable = [
+		self::Course_col,
+		self::Category_col
 	];
 
 	public function course()

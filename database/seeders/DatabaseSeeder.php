@@ -6,6 +6,8 @@ namespace Database\Seeders;
 
 use App\Models\PaymentMethod;
 use App\Models\Role;
+use App\Enums\RoleEnum;
+use App\Enums\PaymentMethodEnum;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,23 +28,23 @@ class DatabaseSeeder extends Seeder
 
 
         Role::create([
-            "type" => "Student"
+            "type" => RoleEnum::STUDENT
         ]);
-        
+
         Role::create([
-            "type" => "School"
+            "type" => RoleEnum::SCHOOL
         ]);
 
         PaymentMethod::create([
-            "method" => "Paypal"
+            "method" => PaymentMethodEnum::PAYPAL
         ]);
 
         PaymentMethod::create([
-            "method" => "Credit Card"
+            "method" => PaymentMethodEnum::CREDIT_CARD
         ]);
 
         PaymentMethod::create([
-            "method" => "Free"
+            "method" => PaymentMethodEnum::FREE
         ]);
     }
 }

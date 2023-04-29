@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Enums\RoleEnum;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +34,12 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
 Route::controller(RoleController::class)->prefix('role')->group(function () {
     Route::middleware('auth:sanctum')->get('/', 'getRoles');
 });
+
+Route::controller(CourseController::class)->prefix('course')->group(function () {
+    Route::middleware('auth:sanctum')->post('/', 'addCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+});
+
+Route::controller(CategoryController::class)->prefix('category')->group(function () {
+    Route::middleware('auth:sanctum')->post('/', 'addCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+});
+
