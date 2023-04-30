@@ -17,6 +17,15 @@ class CategoryController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
+    public function getCategories()
+    {
+        $categories = $this->categoryRepository->getAll();
+
+        return response([
+            "categories" => $categories
+        ])->header('Content-Type','application/json');
+    }
+
     public function addCategory(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -44,4 +53,60 @@ class CategoryController extends Controller
             "message" => "success"
         ])->header('Content-Type','application/json');
     }
+
+    public function updateCategory(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'id' => 'required|exists:categories,id',
+            'title' => 'required|max:255',
+            'description' => 'required|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $categoryCreated = $this->categoryRepository->update(
+            $request->id,
+            $request->title,
+            $request->description
+        );
+
+        if ($categoryCreated == null)
+            return response([
+                "message" => "error"
+            ])->header('Content-Type','application/json');
+
+
+        return response([
+            "message" => "success"
+        ])->header('Content-Type','application/json');
+    }
+
+
+    public function deleteCategory(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'id' => 'required|exists:categories,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $categoryCreated = $this->categoryRepository->delete($request->id);
+
+        if ($categoryCreated == null)
+            return response([
+                "message" => "error"
+            ])->header('Content-Type','application/json');
+
+
+        return response([
+            "message" => "success"
+        ])->header('Content-Type','application/json');
+    }
+
 }

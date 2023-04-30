@@ -40,6 +40,9 @@ Route::controller(CourseController::class)->prefix('course')->group(function () 
 });
 
 Route::controller(CategoryController::class)->prefix('category')->group(function () {
+    Route::get('/', 'getCategories');
     Route::middleware('auth:sanctum')->post('/', 'addCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+    Route::middleware('auth:sanctum')->put('/', 'updateCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+    Route::middleware('auth:sanctum')->delete('/', 'deleteCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
 });
 

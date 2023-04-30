@@ -19,15 +19,14 @@ class CategoryRepository{
         return $categoryCreated;
     }
 
-    public function update($id, $name, $password, $profile, $birthday)
+    public function update($id, $title, $description)
     {
-        // $user = User::query()->where('id',$id)->firstOrFail();
+        $category = Category::query()->where('id',$id)->firstOrFail();
 
-        // $user->name = $name;
-        // $user->profile_id = $profile;
-        // $user->employee->birthday = $birthday;
+        $category->title = $title;
+        $category->description = $description;
 
-        // return $user->save() && $user->employee->save();
+        return $category->save();
     }
 
     public function getById($id)
@@ -38,13 +37,10 @@ class CategoryRepository{
 
     public function getAll()
     {
-        // $users = User::query()
-        //     ->with("employee")
-        //     ->with("profile")
-        //     ->get();
+        $categories = Category::query()
+            ->get();
 
-        // //Validate if users is not empty, to give formate or return empty array
-        // return count($users) > 0 ? $users->map->format() : [];
+        return $categories;
     }
 
     public function delete($id)
