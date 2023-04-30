@@ -96,9 +96,9 @@ class CategoryController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $categoryCreated = $this->categoryRepository->delete($request->id);
+        $categoryDeleted = $this->categoryRepository->delete($request->id);
 
-        if ($categoryCreated == null)
+        if ($categoryDeleted == null)
             return response([
                 "message" => "error"
             ])->header('Content-Type','application/json');

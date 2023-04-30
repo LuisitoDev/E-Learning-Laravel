@@ -21,11 +21,7 @@ class CourseRepository{
         );
 
         $categories_created = [];
-        foreach ($categories as $category) {
-            $categories_created[] = $courseCreated->course_category()->create([
-                CourseCategory::Category_col => $category
-            ]);
-        }
+        $categories_created = $courseCreated->categories()->sync($categories);
 
         $levels_created = [];
         foreach ($levels as $level) {
@@ -39,21 +35,45 @@ class CourseRepository{
         }
 
         return [
-            "course: " => $courseCreated,
+            "course" => $courseCreated,
             "categories_course" => $categories_created,
             "levels" => $levels_created
         ];
     }
 
-    public function update($id, $name, $password, $profile, $birthday)
+    public function update($id, $title, $description, $cost, $categories, $levels)
     {
-        // $user = User::query()->where('id',$id)->firstOrFail();
+        $courseUpdated = Course::query()->where('id', $id)->firstOrFail();
 
-        // $user->name = $name;
-        // $user->profile_id = $profile;
-        // $user->employee->birthday = $birthday;
+        $courseUpdated->update([
+            Course::Title_col => $title,
+            Course::Descrption_col => $description,
+            Course::Cost_col => $cost
+            ]
+        );
 
-        // return $user->save() && $user->employee->save();
+        $categories_updated = $courseUpdated->categories()->sync($categories);
+
+        //TODO: HOW TO HANDLE UPDATE LEVELS OF COURSES WHEN WE COULD DELET THEM, ADD NEW ONES OR UDATE WAS WELL
+        // $levels_updated = [];
+        // foreach ($levels as $level) {
+        //     $level_found = Level::query()->where('id', $level["id"])->firstOrFail();
+        //     $level_found->update([
+        //         Level::Title_col => $level["title"],
+        //         Level::Video_Path_col => $level["video_path"],
+        //         Level::PDF_Path_col => $level["pdf_path"],
+        //         Level::Content_col => $level["content"],
+        //         Level::Free_Trial_col => $level["free_trial"]
+        //         ]
+        //     );
+        //     $levels_updated[] = $level_found;
+        // }
+
+        return [
+            "course" => $courseUpdated,
+            "categories_course" => $categories_updated,
+            // "levels" => $levels_updated
+        ];
     }
 
     public function getById($id)
@@ -62,15 +82,16 @@ class CourseRepository{
             ->where('id',$id)->firstOrFail();
     }
 
-    public function getAll()
+    public function getRecentCourses()
     {
-        // $users = User::query()
-        //     ->with("employee")
-        //     ->with("profile")
-        //     ->get();
+        //TODO: GET PERCENTAGE OF VOTES
+        $courses = Course::query()
+            ->with("creator_user")
+            ->with("votes")
+            ->orderBy(Course::CREATED_AT, 'desc')
+            ->get()->take(12);
 
-        // //Validate if users is not empty, to give formate or return empty array
-        // return count($users) > 0 ? $users->map->format() : [];
+        return $courses;
     }
 
     public function delete($id)

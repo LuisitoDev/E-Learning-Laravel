@@ -36,7 +36,10 @@ Route::controller(RoleController::class)->prefix('role')->group(function () {
 });
 
 Route::controller(CourseController::class)->prefix('course')->group(function () {
+    Route::get('/recent-courses', 'getRecentCourses');
     Route::middleware('auth:sanctum')->post('/', 'addCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+    Route::middleware('auth:sanctum')->put('/', 'updateCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+    Route::middleware('auth:sanctum')->delete('/', 'deleteCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
 });
 
 Route::controller(CategoryController::class)->prefix('category')->group(function () {

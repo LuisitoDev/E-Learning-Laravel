@@ -60,6 +60,13 @@ class User extends Model implements UserFields
         self::Password_col
     ];
 
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute()
+    {
+        return $this->name.($this->first_surname ? ' '.$this->first_surname : '').($this->second_surname ? ' '.$this->second_surname : '');
+    }
+
     // public function authorizeRoles($roles)
     // {
     //     if ($this->hasAnyRole($roles)) {
