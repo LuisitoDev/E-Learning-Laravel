@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Course;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Repositories\Course\CourseRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -68,11 +69,10 @@ class CourseController extends Controller
         ])->header('Content-Type','application/json');
     }
 
-    public function updateCourse(Request $request)
+    public function updateCourse(Request $request, Course $course)
     {
         $validator = Validator::make($request->all(),
         [
-            'id' => 'required|exists:courses,id',
             'title' => 'required|max:255',
             'description' => 'required|max:255',
             'cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -86,7 +86,7 @@ class CourseController extends Controller
         }
 
         $courseCreated = $this->courseRepository->update(
-            $request->id,
+            $course->id,
             $request->title,
             $request->description,
             $request->cost,
@@ -106,18 +106,9 @@ class CourseController extends Controller
         ])->header('Content-Type','application/json');
     }
 
-    public function deleteCourse(Request $request)
+    public function deleteCourse(Course $course)
     {
-        $validator = Validator::make($request->all(),
-        [
-            'id' => 'required|exists:courses,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $courseDeleted = $this->courseRepository->delete($request->id);
+        $courseDeleted = $this->courseRepository->delete($course->id);
 
         if ($courseDeleted == null)
             return response([

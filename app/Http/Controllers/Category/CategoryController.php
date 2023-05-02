@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Category;
 
-use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Repositories\Category\CategoryRepository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -54,11 +54,10 @@ class CategoryController extends Controller
         ])->header('Content-Type','application/json');
     }
 
-    public function updateCategory(Request $request)
+    public function updateCategory(Request $request, Category $category)
     {
         $validator = Validator::make($request->all(),
         [
-            'id' => 'required|exists:categories,id',
             'title' => 'required|max:255',
             'description' => 'required|max:255'
         ]);
@@ -68,7 +67,7 @@ class CategoryController extends Controller
         }
 
         $categoryCreated = $this->categoryRepository->update(
-            $request->id,
+            $category->id,
             $request->title,
             $request->description
         );
@@ -85,18 +84,9 @@ class CategoryController extends Controller
     }
 
 
-    public function deleteCategory(Request $request)
+    public function deleteCategory(Category $category)
     {
-        $validator = Validator::make($request->all(),
-        [
-            'id' => 'required|exists:categories,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $categoryDeleted = $this->categoryRepository->delete($request->id);
+        $categoryDeleted = $this->categoryRepository->delete($category->id);
 
         if ($categoryDeleted == null)
             return response([

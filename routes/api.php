@@ -25,27 +25,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::controller(UserController::class)->prefix('user')->group(function () {
-    Route::post('/register', 'register')->middleware("transaction");
+    Route::middleware("sql_transaction")->post('/register', 'register');
     Route::post('/login', 'login');
     Route::middleware('auth:sanctum')->post('/logout', 'logout');
 });
 
 
 Route::controller(RoleController::class)->prefix('role')->group(function () {
-    Route::middleware('auth:sanctum')->get('/', 'getRoles');
+    Route::get('/', 'getRoles');
 });
 
 Route::controller(CourseController::class)->prefix('course')->group(function () {
     Route::get('/recent-courses', 'getRecentCourses');
-    Route::middleware('auth:sanctum')->post('/', 'addCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
-    Route::middleware('auth:sanctum')->put('/', 'updateCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
-    Route::middleware('auth:sanctum')->delete('/', 'deleteCourse')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+
+    Route::middleware("auth:sanctum", "sql_transaction", 'role:'.RoleEnum::SCHOOL)->group(function() {
+        Route::post('/', 'addCourse');
+        Route::middleware("can:updateCourse,course")->put('/{course}', 'updateCourse');
+        Route::middleware("can:deleteCourse,course")->delete('/{course}', 'deleteCourse');
+    });
+
 });
 
 Route::controller(CategoryController::class)->prefix('category')->group(function () {
     Route::get('/', 'getCategories');
-    Route::middleware('auth:sanctum')->post('/', 'addCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
-    Route::middleware('auth:sanctum')->put('/', 'updateCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
-    Route::middleware('auth:sanctum')->delete('/', 'deleteCategory')->middleware('role:'.RoleEnum::SCHOOL)->middleware("transaction");
+
+    Route::middleware("auth:sanctum", "sql_transaction", 'role:'.RoleEnum::SCHOOL)->group(function() {
+        Route::post('/', 'addCategory');
+        Route::middleware("can:updateCategory,course")->put('/{category}', 'updateCategory');
+        Route::middleware("can:deleteCategory,course")->delete('/{category}', 'deleteCategory');
+    });
 });
 
