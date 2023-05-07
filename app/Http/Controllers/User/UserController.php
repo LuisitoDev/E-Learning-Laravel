@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Repositories\User\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,11 @@ class UserController extends Controller
     public function login(Request $request) {
         $request->validate([
             'email' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'role' => 'required|exists:'.Role::table_name.','.Role::Id_col
         ]);
 
-        $user = $this->userRepository->findByEmailPassword($request->email, $request->password);
+        $user = $this->userRepository->findByEmailPassword($request->email, $request->password, $request->role);
 
         if ($user == null) {
             // throw ValidationException::withMessages([
@@ -33,17 +35,17 @@ class UserController extends Controller
                 "error"
             ])->header('Content-Type','application/json');
         }
-    
+
         // return $user->createToken($request->device_name)->plainTextToken;
         return response([
             "auth_token" => $user->createToken('auth_token')->plainTextToken
         ])->header('Content-Type','application/json');
-        
+
     }
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), 
+        $validator = Validator::make($request->all(),
         [
             'name' => 'required|max:255',
             'first_surname' => 'required|max:255',

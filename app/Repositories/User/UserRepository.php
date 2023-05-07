@@ -2,6 +2,7 @@
 
 namespace App\Repositories\User;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Hash;
@@ -12,11 +13,11 @@ class UserRepository{
     public function save($name, $first_surname, $second_surname, $birthday, $email, $password, $roles) : User
     {
         $userCreated = User::create([
-            User::Name_col              => $name, 
-            User::First_Surname_col     => $first_surname, 
-            User::Second_Surname_col    => $second_surname, 
+            User::Name_col              => $name,
+            User::First_Surname_col     => $first_surname,
+            User::Second_Surname_col    => $second_surname,
             User::Birthday_col          => $birthday,
-            User::Email_col             => $email, 
+            User::Email_col             => $email,
             User::Password_col          => Hash::make($password)
             ]
         );
@@ -28,21 +29,26 @@ class UserRepository{
             ]);
         }
 
-        
+
 
         return $userCreated;
-    } 
+    }
 
-    public function findByEmailPassword($email, $password)
+    public function findByEmailPassword($email, $password, $role_id)
     {
-        $user = User::where('email', $email)->first();
- 
+        $user = User::query()
+            ->withWhereHas('roles', function ($query) use($role_id) {
+                $query->where(Role::Id_col, $role_id);
+            })
+            ->where(User::Email_col, $email)
+            ->first();
+
         if (! $user || ! Hash::check($password, $user->password)) {
             return null;
         }
-    
+
         return $user;
-    } 
+    }
 
     public function update($id, $name, $password, $profile, $birthday)
     {
@@ -54,7 +60,7 @@ class UserRepository{
         // $user->employee->birthday = $birthday;
 
         // return $user->save() && $user->employee->save();
-    } 
+    }
 
     public function getById($id)
     {
@@ -77,5 +83,5 @@ class UserRepository{
     {
         return User::query()
             ->where('id',$id)->delete();
-    } 
+    }
 }
